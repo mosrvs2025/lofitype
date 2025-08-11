@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LoFi Typing Remix</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles/base.css" />
+    <link rel="stylesheet" href="/styles/typing.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <h1 class="title">LoFi Typing</h1>
+      <div class="controls" role="group" aria-label="Controls">
+        <button id="newPromptBtn" class="btn">New Prompt</button>
+        <button id="resetBtn" class="btn btn-secondary">Reset</button>
+        <button id="themeToggle" class="btn" aria-pressed="false">Theme</button>
+        <button id="musicToggle" class="btn btn-icon" aria-pressed="false" aria-label="Toggle music">♫</button>
+        <label class="volume">
+          <span>Vol</span>
+          <input id="volume" type="range" min="0" max="1" step="0.01" value="0.4" />
+        </label>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="typing-card" aria-live="polite">
+        <div id="prompt" class="prompt" tabindex="0" aria-label="Typing prompt"></div>
+        <!-- Hidden input drives mobile keyboard -->
+        <input
+          id="hidden-input"
+          class="hidden-input"
+          inputmode="text"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-hidden="true"
+        />
+        <p class="hint">Tap here and start typing. Backspace to fix mistakes.</p>
+      </section>
+
+      <aside class="stats-card" aria-label="Typing statistics">
+        <div class="stat"><span class="label">WPM</span><span id="wpm">0</span></div>
+        <div class="stat"><span class="label">Accuracy</span><span id="accuracy">100%</span></div>
+        <div class="stat"><span class="label">Time</span><span id="elapsed">0.0s</span></div>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <small>Made with chill vibes. Add your own tracks in <code>/public/audio</code>.</small>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
