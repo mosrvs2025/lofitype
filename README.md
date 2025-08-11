@@ -1,33 +1,38 @@
 # LoFi Typing Remix
 
-A lightweight, responsive typing app with a calm lofi vibe. No build step, no backend—just static files you can deploy to Netlify or any static host.
+A lightweight, responsive typing app with a calm lofi vibe. Static files + one Netlify Function that asks **Gemini** to generate an SVG background. Your API key stays server-side.
 
 ## Features
-- Mobile-first typing with a hidden input (disables autocorrect/caps/spellcheck).
-- Real-time **WPM**, **accuracy**, **elapsed time**.
-- Per-character feedback with a custom caret.
-- Lofi music (user-initiated) + volume slider.
-- Light/Dark theme with `localStorage` persistence.
-- No user-agent sniffing—pure responsive CSS and small feature checks.
+- Mobile-first typing (hidden input disables autocorrect/caps/spellcheck)
+- Real-time **WPM**, **accuracy**, **elapsed time**
+- Per-character feedback + custom caret
+- Lofi music (user-initiated) + volume slider
+- Light/Dark theme with `localStorage`
+- **Gemini-powered background** via Netlify Function (no key exposure)
 
 ## Quick Start
-Just open `index.html` in a modern browser, or serve statically with any HTTP server.
+- Open `index.html` locally or serve statically.
+- Click **Generate BG** to call the serverless function (requires deploy with env var).
 
 ## Deploy on Netlify
 1. Push this repo to GitHub.
-2. In Netlify, **New site from Git** → pick your repo.
-3. No build command. **Publish directory:** `/` (repo root).
-4. Deploy. That’s it.
+2. In Netlify: **New site from Git** → select repo.
+3. **Build command:** _none_ (static). **Publish directory:** `/` (repo root).
+4. In Site settings → **Environment variables**, add `GEMINI_API_KEY` with your key.
+5. Deploy. The function will be available at `/.netlify/functions/generate_bg`.
+
+## Local dev (optional)
+- Install Netlify CLI: `npm i -g netlify-cli`
+- Run: `netlify dev` (reads `.env` if present)
+- Add a local `.env` with `GEMINI_API_KEY=...` (do **not** commit).
 
 ## Customize
-- **Prompts:** `src/prompts.js` (`PROMPTS` + `PARAGRAPHS`).
-- **Theme:** tweak CSS variables in `styles/base.css`.
-- **Audio:** drop `public/audio/track1.mp3`.
+- **Prompts:** `src/prompts.js`
+- **Theme:** CSS variables in `styles/base.css`
+- **Audio:** add `public/audio/track1.mp3`
 
-## Accessibility
-- Keyboard focus retained via hidden input; visual caret for current character.
-- Color contrast tuned for light/dark.
-- Respects reduced motion (keep animations minimal).
+## Security note
+Never commit your API key. Keep it in Netlify env vars or a local `.env` for dev.
 
 ## License
 MIT – see `LICENSE`.

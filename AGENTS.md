@@ -3,27 +3,22 @@
 ## Mission
 Keep the app **fast, stable, and accessible**. Prefer clarity over cleverness.
 
-## How to Work
-- Use feature branches and PRs.
-- Write small, focused commits: `feat:`, `fix:`, `refactor:`, `docs:`, `style:`.
-- Keep JS modular in `src/` and CSS split between `styles/base.css` and `styles/typing.css`.
-
 ## Definition of Done
-- Works on **mobile** and **desktop**.
-- No regressions in WPM/accuracy updates.
-- Hidden input remains focused; mobile keyboard appears reliably.
-- Lint-free. No unhandled errors in console.
-- Accessibility: logical heading order, focusable prompt container, descriptive button labels.
+- Mobile + desktop work reliably (keyboard focus, backspace, stats updates)
+- Hidden input remains focused; mobile keyboard appears
+- No user-agent sniffing; only media queries + small feature checks
+- Gemini background function returns valid SVG and never exposes the key
+- No console errors; basic a11y checks pass (labels, focus, contrast)
 
-## Review Checklist
-- [ ] Layout reflows under 600px and 900px.
-- [ ] No user-agent sniffing; use media queries and feature checks only.
-- [ ] Audio does not autoplay; UI toggle required.
-- [ ] Prompt rendering does not reflow excessively (spans reused/reset).
-- [ ] Stats math: WPM `(correct/5)/(seconds/60)`, accuracy `correct/typed`.
+## PR Checklist
+- [ ] Layout reflows at 900px and 600px breakpoints
+- [ ] Stats math: WPM `(correct/5)/(seconds/60)`, accuracy `correct/typed`
+- [ ] Function path `/.netlify/functions/generate_bg` returns `{ svg: string }`
+- [ ] Strip code fences from model output before using SVG
+- [ ] Don’t change `netlify.toml` without explaining why
 
-## Roadmap (PRs welcome)
-- Settings modal (font size, caret style).
-- Multi-track playlist with memory of last track.
-- Local history of sessions (date, wpm, accuracy) in `localStorage`.
-- Optional PWA manifest.
+## Roadmap
+- Settings modal (font size, caret style)
+- Playlist with multiple tracks
+- Session history via `localStorage`
+- Optional PWA manifest

@@ -9,11 +9,14 @@
     <link rel="stylesheet" href="/styles/typing.css" />
   </head>
   <body>
+    <div id="bg-layer" aria-hidden="true"></div>
+
     <header class="site-header">
       <h1 class="title">LoFi Typing</h1>
       <div class="controls" role="group" aria-label="Controls">
         <button id="newPromptBtn" class="btn">New Prompt</button>
         <button id="resetBtn" class="btn btn-secondary">Reset</button>
+        <button id="bgGenBtn" class="btn" title="Generate lofi background (Gemini)">Generate BG</button>
         <button id="themeToggle" class="btn" aria-pressed="false">Theme</button>
         <button id="musicToggle" class="btn btn-icon" aria-pressed="false" aria-label="Toggle music">♫</button>
         <label class="volume">
