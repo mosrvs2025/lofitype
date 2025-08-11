@@ -16,6 +16,7 @@ const resetBtn = qs("#resetBtn");
 const themeBtn = qs("#themeToggle");
 const musicBtn = qs("#musicToggle");
 const volumeEl = qs("#volume");
+const bgGenBtn = qs("#bgGenBtn");
 
 const engine = new TypingEngine(promptEl);
 const stats = new Stats();
@@ -63,42 +64,64 @@ function onBackspace() {
 }
 
 function setupInput() {
-  // Always funnel through the hidden input for reliable mobile keyboards.
   promptEl.addEventListener("click", () => hiddenInput.focus(), { passive: true });
 
-  // Diff input value to get the new character
   let lastValue = "";
   hiddenInput.addEventListener("input", (e) => {
     startIfNeeded();
     const v = e.target.value;
-    const add = v.slice(lastValue.length); // new text appended
+    const add = v.slice(lastValue.length);
     if (add.length > 0) {
       for (const ch of add) onChar(ch);
     } else if (v.length < lastValue.length) {
-      // deletion via OS keyboard
       onBackspace();
     }
     lastValue = e.target.value;
   });
 
-  // Capture physical Backspace reliably
   hiddenInput.addEventListener("keydown", (e) => {
     if (e.key === "Backspace") {
       e.preventDefault();
       if (hiddenInput.value.length > 0) hiddenInput.value = hiddenInput.value.slice(0, -1);
       onBackspace();
     } else if (e.key === "Tab") {
-      e.preventDefault(); // keep focus inside
+      e.preventDefault();
     } else if (e.key.length === 1) {
-      // Physical keyboards add via keydown; mirror to value so input handler stays consistent
       hiddenInput.value += e.key;
     }
   });
 
-  // Improve mobile: auto-focus when page becomes visible
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden) hiddenInput.focus();
   });
+}
+
+async function generateBackground() {
+  bgGenBtn.disabled = true;
+  const original = bgGenBtn.textContent;
+  bgGenBtn.textContent = "Generating…";
+  try {
+    const theme = document.documentElement.getAttribute("data-theme") || "dark";
+    const res = await fetch("/.netlify/functions/generate_bg", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ theme })
+    });
+    if (!res.ok) throw new Error("BG request failed");
+    const data = await res.json();
+    if (data.svg) {
+      const encoded = encodeURIComponent(data.svg);
+      document.documentElement.style.setProperty("--bg-image", `url("data:image/svg+xml;utf8,${encoded}")`);
+    } else if (data.cssGradient) {
+      document.documentElement.style.setProperty("--bg-image", data.cssGradient);
+    }
+  } catch (e) {
+    console.error(e);
+    alert("Could not generate background. Check your Netlify env var GEMINI_API_KEY.");
+  } finally {
+    bgGenBtn.disabled = false;
+    bgGenBtn.textContent = original;
+  }
 }
 
 function setupControls() {
@@ -123,6 +146,8 @@ function setupControls() {
     Music.setVolume(v);
     localStorage.setItem("volume", String(v));
   });
+
+  bgGenBtn.addEventListener("click", generateBackground);
 }
 
 function tick() {
